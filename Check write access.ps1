@@ -26,7 +26,7 @@ function Test-WriteAccessRecursive {
     param (
         [string]$RootPath
     )
-    $items = Get-ChildItem -Path $RootPath -Recurse -ErrorAction SilentlyContinue
+    $items = Get-ChildItem -Path $RootPath -Recurse -depth 2 -ErrorAction SilentlyContinue
     $items | ForEach-Object {
         $hasWriteAccess = Test-WriteAccess -Path $_.FullName
         [PSCustomObject]@{
@@ -52,4 +52,5 @@ if($null -eq $noWriteAccess){
     Write-Output "You have write access to all files"
 } else {
     Write-Output $noWriteAccess | Format-Table -AutoSize
+    $noWriteAccess | Select-Object -ExpandProperty CategoryInfo | Export-Csv -NoTypeInformation -Path C:\Temp\NoWriteAccess.csv
 }
